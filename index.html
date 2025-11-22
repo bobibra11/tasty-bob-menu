@@ -14,8 +14,8 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #0a0a0a;
-            color: #fff;
+            background: linear-gradient(135deg, #fff8f0 0%, #ffe8d6 50%, #ffd4a3 100%);
+            color: #2c2c2c;
             min-height: 100vh;
         }
 
@@ -23,10 +23,11 @@
             position: sticky;
             top: 0;
             z-index: 100;
-            background: rgba(10, 10, 10, 0.95);
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255, 140, 0, 0.2);
+            border-bottom: 2px solid rgba(255, 140, 0, 0.2);
             padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(255, 140, 0, 0.1);
         }
 
         .header-content {
@@ -45,12 +46,13 @@
         .logo img {
             height: 50px;
             width: auto;
+            border-radius: 12px;
         }
 
         .admin-btn {
             background: transparent;
-            color: #888;
-            border: 1px solid #333;
+            color: #666;
+            border: 2px solid #e0e0e0;
             padding: 0.5rem 1rem;
             border-radius: 20px;
             cursor: pointer;
@@ -64,6 +66,7 @@
         .admin-btn:hover {
             border-color: #ff8c00;
             color: #ff8c00;
+            background: rgba(255, 140, 0, 0.05);
         }
 
         .admin-btn.active {
@@ -80,9 +83,9 @@
 
         .hero {
             text-align: center;
-            padding: 4rem 2rem;
-            background: linear-gradient(135deg, rgba(255, 140, 0, 0.1) 0%, rgba(255, 165, 0, 0.05) 100%);
-            border-radius: 20px;
+            padding: 4rem 2rem 2rem;
+            background: linear-gradient(135deg, rgba(255, 140, 0, 0.08) 0%, rgba(255, 165, 0, 0.05) 100%);
+            border-radius: 30px;
             margin-bottom: 3rem;
             position: relative;
             overflow: hidden;
@@ -95,8 +98,40 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle, rgba(255, 140, 0, 0.1) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(255, 140, 0, 0.08) 0%, transparent 70%);
             animation: rotate 20s linear infinite;
+        }
+
+        .hero img {
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(255, 140, 0, 0.2);
+        }
+
+        .scroll-indicator {
+            margin-top: 2rem;
+            animation: bounce 2s infinite;
+            cursor: pointer;
+            position: relative;
+            z-index: 1;
+        }
+
+        .scroll-indicator svg {
+            width: 40px;
+            height: 40px;
+            fill: #ff8c00;
+            filter: drop-shadow(0 2px 4px rgba(255, 140, 0, 0.3));
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-15px);
+            }
+            60% {
+                transform: translateY(-8px);
+            }
         }
 
         @keyframes rotate {
@@ -117,7 +152,7 @@
 
         .hero p {
             font-size: 1.2rem;
-            color: #aaa;
+            color: #666;
             position: relative;
             z-index: 1;
         }
@@ -141,12 +176,13 @@
         }
 
         .modal-content {
-            background: #1a1a1a;
+            background: #fff;
             padding: 2rem;
-            border-radius: 15px;
+            border-radius: 20px;
             max-width: 350px;
             width: 90%;
-            border: 1px solid #333;
+            border: 2px solid rgba(255, 140, 0, 0.2);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
         }
 
         .modal-content h2 {
@@ -159,10 +195,10 @@
         .modal-content input {
             width: 100%;
             padding: 0.75rem;
-            border: 1px solid #333;
-            background: #0a0a0a;
-            color: #fff;
-            border-radius: 8px;
+            border: 2px solid #e0e0e0;
+            background: #f9f9f9;
+            color: #2c2c2c;
+            border-radius: 10px;
             font-size: 0.95rem;
             margin-bottom: 1rem;
         }
@@ -170,6 +206,7 @@
         .modal-content input:focus {
             outline: none;
             border-color: #ff8c00;
+            background: #fff;
         }
 
         .modal-buttons {
@@ -199,13 +236,14 @@
         }
 
         .modal-btn-secondary {
-            background: transparent;
-            color: #888;
-            border: 1px solid #333;
+            background: #f5f5f5;
+            color: #666;
+            border: 2px solid #e0e0e0;
         }
 
         .modal-btn-secondary:hover {
-            border-color: #555;
+            border-color: #ccc;
+            background: #eee;
         }
 
         .error-message {
@@ -222,11 +260,12 @@
         }
 
         .add-section {
-            background: #1a1a1a;
+            background: #fff;
             padding: 1.5rem;
-            border-radius: 15px;
+            border-radius: 20px;
             margin-bottom: 2rem;
-            border: 1px solid #333;
+            border: 2px solid rgba(255, 140, 0, 0.2);
+            box-shadow: 0 4px 15px rgba(255, 140, 0, 0.1);
         }
 
         .add-btn {
@@ -259,17 +298,18 @@
             display: block;
             margin-bottom: 0.5rem;
             font-size: 0.9rem;
-            color: #aaa;
+            color: #666;
+            font-weight: 600;
         }
 
         .form-group input,
         .form-group select {
             width: 100%;
             padding: 0.75rem;
-            border: 1px solid #333;
-            background: #0a0a0a;
-            color: #fff;
-            border-radius: 8px;
+            border: 2px solid #e0e0e0;
+            background: #f9f9f9;
+            color: #2c2c2c;
+            border-radius: 10px;
             font-size: 0.95rem;
         }
 
@@ -277,6 +317,7 @@
         .form-group select:focus {
             outline: none;
             border-color: #ff8c00;
+            background: #fff;
         }
 
         .btn-group {
@@ -306,13 +347,14 @@
         }
 
         .btn-cancel {
-            background: transparent;
-            color: #888;
-            border: 1px solid #333;
+            background: #f5f5f5;
+            color: #666;
+            border: 2px solid #e0e0e0;
         }
 
         .btn-cancel:hover {
-            border-color: #555;
+            border-color: #ccc;
+            background: #eee;
         }
 
         .category-section {
@@ -325,7 +367,7 @@
             gap: 1rem;
             margin-bottom: 2rem;
             padding-bottom: 1rem;
-            border-bottom: 2px solid rgba(255, 140, 0, 0.2);
+            border-bottom: 3px solid rgba(255, 140, 0, 0.3);
         }
 
         .category-icon {
@@ -335,15 +377,13 @@
 
         .category-title h2 {
             font-size: 2rem;
-            background: linear-gradient(135deg, #fff 0%, #aaa 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: #2c2c2c;
+            font-weight: 700;
         }
 
         .category-title p {
             font-size: 1rem;
-            color: #666;
+            color: #888;
         }
 
         .items-grid {
@@ -353,25 +393,25 @@
         }
 
         .item-card {
-            background: #1a1a1a;
-            border-radius: 15px;
+            background: #fff;
+            border-radius: 20px;
             overflow: hidden;
-            border: 1px solid #333;
+            border: 2px solid #f0f0f0;
             transition: all 0.3s;
             cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
         }
 
         .item-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-8px);
             border-color: #ff8c00;
-            box-shadow: 0 10px 30px rgba(255, 140, 0, 0.2);
+            box-shadow: 0 12px 30px rgba(255, 140, 0, 0.25);
         }
 
         .item-image {
             width: 100%;
             height: 180px;
             object-fit: cover;
-            border-bottom: 1px solid #333;
         }
 
         .item-content {
@@ -382,11 +422,12 @@
             font-size: 1.2rem;
             font-weight: bold;
             margin-bottom: 0.3rem;
+            color: #2c2c2c;
         }
 
         .item-name-en {
             font-size: 0.9rem;
-            color: #888;
+            color: #999;
             margin-bottom: 1rem;
         }
 
@@ -476,8 +517,8 @@
         }
 
         .footer {
-            background: #0a0a0a;
-            border-top: 1px solid #333;
+            background: #fff;
+            border-top: 2px solid rgba(255, 140, 0, 0.2);
             text-align: center;
             padding: 2rem;
             margin-top: 4rem;
@@ -493,7 +534,7 @@
         }
 
         .footer p {
-            color: #666;
+            color: #999;
             font-size: 0.9rem;
         }
 
@@ -547,8 +588,13 @@
     </div>
 
     <div class="hero">
-        <img src="https://bobibra11.github.io/tasty-bob-menu/5839039835014892735.jpg" alt="Tasty Bob" style="max-width: 300px; margin-bottom: 1rem;">
-        <p>JUICE & CREPE</p>
+        <img src="https://bobibra11.github.io/tasty-bob-menu/5839039835014892735.jpg" alt="Tasty Bob" style="max-width: 300px; margin-bottom: 1rem; border-radius: 20px;">
+        <p style="font-size: 1.3rem; font-weight: 600; margin-bottom: 1rem;">JUICE & CREPE</p>
+        <div class="scroll-indicator" onclick="document.getElementById('menuContent').scrollIntoView({behavior: 'smooth'})">
+            <svg viewBox="0 0 24 24">
+                <path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z"/>
+            </svg>
+        </div>
     </div>
 
     <div class="container">
