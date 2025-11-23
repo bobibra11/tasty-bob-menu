@@ -388,7 +388,7 @@
 
         .items-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 1.5rem;
         }
 
@@ -410,8 +410,42 @@
 
         .item-image {
             width: 100%;
-            height: 180px;
+            aspect-ratio: 9 / 16;
             object-fit: cover;
+        }
+
+        .item-video {
+            width: 100%;
+            aspect-ratio: 9 / 16;
+            object-fit: cover;
+            background: #000;
+        }
+
+        .featured-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: linear-gradient(135deg, #ff8c00 0%, #ffa500 100%);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.85rem;
+            box-shadow: 0 4px 15px rgba(255, 140, 0, 0.4);
+            z-index: 10;
+        }
+
+        .category-section.featured {
+            background: linear-gradient(135deg, rgba(255, 140, 0, 0.05) 0%, rgba(255, 165, 0, 0.02) 100%);
+            padding: 2rem;
+            border-radius: 25px;
+            border: 2px solid rgba(255, 140, 0, 0.2);
+        }
+
+        .featured .item-card {
+            border: 3px solid #ff8c00;
+            box-shadow: 0 8px 25px rgba(255, 140, 0, 0.3);
+            position: relative;
         }
 
         .item-content {
@@ -609,8 +643,12 @@
                 <div class="form-group">
                     <label>القسم</label>
                     <select id="newCategory">
+                        <option value="featured">⭐ منتج الأسبوع - Product of the Week</option>
                         <option value="coffee">☕ قهوة - Coffee</option>
                         <option value="juices">🍹 عصائر - Juices</option>
+                        <option value="milkshakes">🥤 ميلك شيك - Milk Shakes</option>
+                        <option value="kashta">🍨 قشطة - Kashta</option>
+                        <option value="platefruits">🍓 صحن فواكه - Plate Fruits</option>
                         <option value="icecream">🍦 بوظة - Ice Cream</option>
                         <option value="crepes">🥞 كريب - Crepes</option>
                         <option value="desserts">🍰 حلويات - Desserts</option>
@@ -635,6 +673,12 @@
                 <div class="form-group">
                     <label>رابط الصورة (اختياري)</label>
                     <input type="text" id="newImage" placeholder="https://example.com/image.jpg">
+                </div>
+
+                <div class="form-group">
+                    <label>رابط الفيديو (اختياري - للمنتج المميز فقط)</label>
+                    <input type="text" id="newVideo" placeholder="https://example.com/video.mp4">
+                    <small style="color: #999; font-size: 0.8rem;">استخدم رابط فيديو مباشر (.mp4, .webm) أو YouTube</small>
                 </div>
 
                 <div class="btn-group">
@@ -677,8 +721,12 @@
         let currentUser = null;
 
         const categories = [
+            { id: 'featured', nameAr: 'منتج الأسبوع', nameEn: 'Product of the Week', icon: '⭐' },
             { id: 'coffee', nameAr: 'قهوة', nameEn: 'Coffee', icon: '☕' },
             { id: 'juices', nameAr: 'عصائر', nameEn: 'Juices', icon: '🍹' },
+            { id: 'milkshakes', nameAr: 'ميلك شيك', nameEn: 'Milk Shakes', icon: '🥤' },
+            { id: 'kashta', nameAr: 'قشطة', nameEn: 'Kashta', icon: '🍨' },
+            { id: 'platefruits', nameAr: 'صحن فواكه', nameEn: 'Plate Fruits', icon: '🍓' },
             { id: 'icecream', nameAr: 'بوظة', nameEn: 'Ice Cream', icon: '🍦' },
             { id: 'crepes', nameAr: 'كريب', nameEn: 'Crepes', icon: '🥞' },
             { id: 'desserts', nameAr: 'حلويات', nameEn: 'Desserts', icon: '🍰' }
@@ -802,6 +850,7 @@
             document.getElementById('newNameEn').value = '';
             document.getElementById('newPrice').value = '';
             document.getElementById('newImage').value = '';
+            document.getElementById('newVideo').value = '';
         }
 
         async function addItem() {
@@ -810,6 +859,7 @@
             const price = document.getElementById('newPrice').value.trim();
             const category = document.getElementById('newCategory').value;
             const image = document.getElementById('newImage').value.trim();
+            const video = document.getElementById('newVideo').value.trim();
 
             if (!nameAr || !nameEn || !price) {
                 alert('املأ جميع الحقول المطلوبة');
@@ -821,7 +871,8 @@
                 name_ar: nameAr,
                 name_en: nameEn,
                 price: parseFloat(price),
-                image: image || null
+                image: image || null,
+                video: video || null
             };
 
             const { error } = await supabase
@@ -836,86 +887,3 @@
             cancelAdd();
             loadItems();
         }
-
-        async function deleteItem(id) {
-            if (!confirm('هل تريد حذف هذا المنتج؟')) return;
-
-            const { error } = await supabase
-                .from('menu_items')
-                .delete()
-                .eq('id', id);
-
-            if (error) {
-                alert('فشل حذف المنتج');
-                return;
-            }
-
-            loadItems();
-        }
-
-        function renderMenu() {
-            const content = document.getElementById('menuContent');
-            const emptyMsg = document.getElementById('emptyMessage');
-
-            if (items.length === 0) {
-                content.innerHTML = '';
-                emptyMsg.classList.remove('hidden');
-                return;
-            }
-
-            emptyMsg.classList.add('hidden');
-            let html = '';
-
-            categories.forEach(category => {
-                const categoryItems = items.filter(item => item.category_id === category.id);
-                
-                if (categoryItems.length === 0) return;
-
-                html += `
-                    <div class="category-section">
-                        <div class="category-header">
-                            <span class="category-icon">${category.icon}</span>
-                            <div class="category-title">
-                                <h2>${category.nameAr}</h2>
-                                <p>${category.nameEn}</p>
-                            </div>
-                        </div>
-                        <div class="items-grid">
-                `;
-
-                categoryItems.forEach(item => {
-                    html += `
-                        <div class="item-card">
-                            ${item.image ? `<img src="${item.image}" alt="${item.name_en}" class="item-image">` : ''}
-                            <div class="item-content">
-                                <div class="item-name-ar">${item.name_ar}</div>
-                                <div class="item-name-en">${item.name_en}</div>
-                                <div class="item-footer">
-                                    <div class="item-price">$${item.price.toFixed(2)}</div>
-                                    ${isAdmin ? `
-                                        <div class="item-actions">
-                                            <button class="icon-btn delete-btn" onclick="deleteItem(${item.id})">🗑️</button>
-                                        </div>
-                                    ` : ''}
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                });
-
-                html += '</div></div>';
-            });
-
-            content.innerHTML = html;
-        }
-
-        // Enter key support
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('passwordInput').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') login();
-            });
-            checkAuth();
-        });
-    </script>
-</body>
-</html>
