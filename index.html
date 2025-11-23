@@ -6,598 +6,92 @@
     <title>TASTY BOB</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #fff8f0 0%, #ffe8d6 50%, #ffd4a3 100%);
-            color: #2c2c2c;
-            min-height: 100vh;
-        }
-
-        .header {
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-bottom: 2px solid rgba(255, 140, 0, 0.2);
-            padding: 1rem 2rem;
-            box-shadow: 0 2px 10px rgba(255, 140, 0, 0.1);
-        }
-
-        .header-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-        }
-
-        .logo img {
-            height: 50px;
-            width: auto;
-            border-radius: 12px;
-        }
-
-        .admin-btn {
-            background: transparent;
-            color: #666;
-            border: 2px solid #e0e0e0;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
-        }
-
-        .admin-btn:hover {
-            border-color: #ff8c00;
-            color: #ff8c00;
-            background: rgba(255, 140, 0, 0.05);
-        }
-
-        .admin-btn.active {
-            background: linear-gradient(135deg, #ff8c00 0%, #ffa500 100%);
-            color: #fff;
-            border-color: transparent;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-
-        .hero {
-            text-align: center;
-            padding: 4rem 2rem 2rem;
-            background: linear-gradient(135deg, rgba(255, 140, 0, 0.08) 0%, rgba(255, 165, 0, 0.05) 100%);
-            border-radius: 30px;
-            margin-bottom: 3rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255, 140, 0, 0.08) 0%, transparent 70%);
-            animation: rotate 20s linear infinite;
-        }
-
-        .hero img {
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(255, 140, 0, 0.2);
-        }
-
-        .scroll-indicator {
-            margin-top: 2rem;
-            animation: bounce 2s infinite;
-            cursor: pointer;
-            position: relative;
-            z-index: 1;
-        }
-
-        .scroll-indicator svg {
-            width: 40px;
-            height: 40px;
-            fill: #ff8c00;
-            filter: drop-shadow(0 2px 4px rgba(255, 140, 0, 0.3));
-        }
-
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {
-                transform: translateY(0);
-            }
-            40% {
-                transform: translateY(-15px);
-            }
-            60% {
-                transform: translateY(-8px);
-            }
-        }
-
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        .hero h1 {
-            font-size: 3.5rem;
-            margin-bottom: 0.5rem;
-            position: relative;
-            z-index: 1;
-            background: linear-gradient(135deg, #ff8c00 0%, #ffa500 50%, #ff8c00 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .hero p {
-            font-size: 1.2rem;
-            color: #666;
-            position: relative;
-            z-index: 1;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(5px);
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal.show {
-            display: flex;
-        }
-
-        .modal-content {
-            background: #fff;
-            padding: 2rem;
-            border-radius: 20px;
-            max-width: 350px;
-            width: 90%;
-            border: 2px solid rgba(255, 140, 0, 0.2);
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-        }
-
-        .modal-content h2 {
-            font-size: 1.3rem;
-            margin-bottom: 1.5rem;
-            text-align: center;
-            color: #ff8c00;
-        }
-
-        .modal-content input {
-            width: 100%;
-            padding: 0.75rem;
-            border: 2px solid #e0e0e0;
-            background: #f9f9f9;
-            color: #2c2c2c;
-            border-radius: 10px;
-            font-size: 0.95rem;
-            margin-bottom: 1rem;
-        }
-
-        .modal-content input:focus {
-            outline: none;
-            border-color: #ff8c00;
-            background: #fff;
-        }
-
-        .modal-buttons {
-            display: flex;
-            gap: 0.75rem;
-        }
-
-        .modal-btn {
-            flex: 1;
-            padding: 0.75rem;
-            border: none;
-            border-radius: 8px;
-            font-size: 0.95rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .modal-btn-primary {
-            background: linear-gradient(135deg, #ff8c00 0%, #ffa500 100%);
-            color: #fff;
-        }
-
-        .modal-btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255, 140, 0, 0.3);
-        }
-
-        .modal-btn-secondary {
-            background: #f5f5f5;
-            color: #666;
-            border: 2px solid #e0e0e0;
-        }
-
-        .modal-btn-secondary:hover {
-            border-color: #ccc;
-            background: #eee;
-        }
-
-        .error-message {
-            color: #ff4444;
-            font-size: 0.85rem;
-            margin-top: 0.5rem;
-            text-align: center;
-        }
-
-        .loading {
-            text-align: center;
-            padding: 3rem;
-            color: #666;
-        }
-
-        .add-section {
-            background: #fff;
-            padding: 1.5rem;
-            border-radius: 20px;
-            margin-bottom: 2rem;
-            border: 2px solid rgba(255, 140, 0, 0.2);
-            box-shadow: 0 4px 15px rgba(255, 140, 0, 0.1);
-        }
-
-        .add-btn {
-            width: 100%;
-            background: linear-gradient(135deg, #ff8c00 0%, #ffa500 100%);
-            color: white;
-            border: none;
-            padding: 1rem;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            transition: all 0.3s;
-        }
-
-        .add-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(255, 140, 0, 0.4);
-        }
-
-        .form-group {
-            margin-bottom: 1.2rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-size: 0.9rem;
-            color: #666;
-            font-weight: 600;
-        }
-
-        .form-group input,
-        .form-group select {
-            width: 100%;
-            padding: 0.75rem;
-            border: 2px solid #e0e0e0;
-            background: #f9f9f9;
-            color: #2c2c2c;
-            border-radius: 10px;
-            font-size: 0.95rem;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: #ff8c00;
-            background: #fff;
-        }
-
-        .btn-group {
-            display: flex;
-            gap: 0.75rem;
-        }
-
-        .btn {
-            flex: 1;
-            padding: 0.75rem;
-            border: none;
-            border-radius: 8px;
-            font-size: 0.95rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .btn-save {
-            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
-            color: white;
-        }
-
-        .btn-save:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
-        }
-
-        .btn-cancel {
-            background: #f5f5f5;
-            color: #666;
-            border: 2px solid #e0e0e0;
-        }
-
-        .btn-cancel:hover {
-            border-color: #ccc;
-            background: #eee;
-        }
-
-        .category-section {
-            margin-bottom: 4rem;
-        }
-
-        .category-header {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 2rem;
-            padding-bottom: 1rem;
-            border-bottom: 3px solid rgba(255, 140, 0, 0.3);
-        }
-
-        .category-icon {
-            font-size: 2.5rem;
-            filter: drop-shadow(0 0 10px rgba(255, 140, 0, 0.3));
-        }
-
-        .category-title h2 {
-            font-size: 2rem;
-            color: #2c2c2c;
-            font-weight: 700;
-        }
-
-        .category-title p {
-            font-size: 1rem;
-            color: #888;
-        }
-
-        .items-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .item-card {
-            background: #fff;
-            border-radius: 20px;
-            overflow: hidden;
-            border: 2px solid #f0f0f0;
-            transition: all 0.3s;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-        }
-
-        .item-card:hover {
-            transform: translateY(-8px);
-            border-color: #ff8c00;
-            box-shadow: 0 12px 30px rgba(255, 140, 0, 0.25);
-        }
-
-        .item-image {
-            width: 100%;
-            aspect-ratio: 9 / 16;
-            object-fit: cover;
-        }
-
-        .item-video {
-            width: 100%;
-            aspect-ratio: 9 / 16;
-            object-fit: cover;
-            background: #000;
-        }
-
-        .featured-badge {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: linear-gradient(135deg, #ff8c00 0%, #ffa500 100%);
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-weight: bold;
-            font-size: 0.85rem;
-            box-shadow: 0 4px 15px rgba(255, 140, 0, 0.4);
-            z-index: 10;
-        }
-
-        .category-section.featured {
-            background: linear-gradient(135deg, rgba(255, 140, 0, 0.05) 0%, rgba(255, 165, 0, 0.02) 100%);
-            padding: 2rem;
-            border-radius: 25px;
-            border: 2px solid rgba(255, 140, 0, 0.2);
-        }
-
-        .featured .item-card {
-            border: 3px solid #ff8c00;
-            box-shadow: 0 8px 25px rgba(255, 140, 0, 0.3);
-            position: relative;
-        }
-
-        .item-content {
-            padding: 1.25rem;
-        }
-
-        .item-name-ar {
-            font-size: 1.2rem;
-            font-weight: bold;
-            margin-bottom: 0.3rem;
-            color: #2c2c2c;
-        }
-
-        .item-name-en {
-            font-size: 0.9rem;
-            color: #999;
-            margin-bottom: 1rem;
-        }
-
-        .item-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .item-price {
-            font-size: 1.5rem;
-            font-weight: bold;
-            background: linear-gradient(135deg, #ff8c00 0%, #ffa500 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .item-actions {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .icon-btn {
-            width: 35px;
-            height: 35px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s;
-            font-size: 1rem;
-        }
-
-        .delete-btn {
-            background: #f44336;
-        }
-
-        .delete-btn:hover {
-            background: #d32f2f;
-            transform: scale(1.1);
-        }
-
-        .empty-message {
-            text-align: center;
-            padding: 3rem;
-            color: #666;
-        }
-
-        .whatsapp-float {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 5px 20px rgba(37, 211, 102, 0.4);
-            transition: all 0.3s;
-            z-index: 999;
-        }
-
-        .whatsapp-float:hover {
-            transform: scale(1.1) translateY(-5px);
-            box-shadow: 0 10px 30px rgba(37, 211, 102, 0.6);
-        }
-
-        .whatsapp-float svg {
-            width: 35px;
-            height: 35px;
-            fill: white;
-        }
-
-        .footer {
-            background: #fff;
-            border-top: 2px solid rgba(255, 140, 0, 0.2);
-            text-align: center;
-            padding: 2rem;
-            margin-top: 4rem;
-        }
-
-        .footer h3 {
-            font-size: 1.3rem;
-            margin-bottom: 0.5rem;
-            background: linear-gradient(135deg, #ff8c00 0%, #ffa500 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .footer p {
-            color: #999;
-            font-size: 0.9rem;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-            
-            .items-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .whatsapp-float {
-                bottom: 20px;
-                right: 20px;
-                width: 55px;
-                height: 55px;
-            }
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #fff8f0 0%, #ffe8d6 50%, #ffd4a3 100%); color: #2c2c2c; min-height: 100vh; }
+        .header { position: sticky; top: 0; z-index: 100; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border-bottom: 2px solid rgba(255, 140, 0, 0.2); padding: 1rem 2rem; box-shadow: 0 2px 10px rgba(255, 140, 0, 0.1); }
+        .header-content { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; }
+        .logo img { height: 50px; width: auto; border-radius: 12px; }
+        .admin-btn { background: transparent; color: #666; border: 2px solid #e0e0e0; padding: 0.5rem 1rem; border-radius: 20px; cursor: pointer; font-size: 0.85rem; transition: all 0.3s; display: flex; align-items: center; gap: 0.3rem; }
+        .admin-btn:hover { border-color: #ff8c00; color: #ff8c00; background: rgba(255, 140, 0, 0.05); }
+        .admin-btn.active { background: linear-gradient(135deg, #ff8c00 0%, #ffa500 100%); color: #fff; border-color: transparent; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+        .hero { text-align: center; padding: 4rem 2rem 2rem; background: linear-gradient(135deg, rgba(255, 140, 0, 0.08) 0%, rgba(255, 165, 0, 0.05) 100%); border-radius: 30px; margin-bottom: 3rem; position: relative; overflow: hidden; }
+        .hero::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(255, 140, 0, 0.08) 0%, transparent 70%); animation: rotate 20s linear infinite; }
+        .hero img { border-radius: 20px; box-shadow: 0 10px 30px rgba(255, 140, 0, 0.2); }
+        .scroll-indicator { margin-top: 2rem; animation: bounce 2s infinite; cursor: pointer; position: relative; z-index: 1; }
+        .scroll-indicator svg { width: 40px; height: 40px; fill: #ff8c00; filter: drop-shadow(0 2px 4px rgba(255, 140, 0, 0.3)); }
+        @keyframes bounce { 0%, 20%, 50%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-15px); } 60% { transform: translateY(-8px); } }
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .hero h1 { font-size: 3.5rem; margin-bottom: 0.5rem; position: relative; z-index: 1; background: linear-gradient(135deg, #ff8c00 0%, #ffa500 50%, #ff8c00 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .hero p { font-size: 1.2rem; color: #666; position: relative; z-index: 1; }
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8); backdrop-filter: blur(5px); align-items: center; justify-content: center; }
+        .modal.show { display: flex; }
+        .modal-content { background: #fff; padding: 2rem; border-radius: 20px; max-width: 350px; width: 90%; border: 2px solid rgba(255, 140, 0, 0.2); box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2); }
+        .modal-content h2 { font-size: 1.3rem; margin-bottom: 1.5rem; text-align: center; color: #ff8c00; }
+        .modal-content input { width: 100%; padding: 0.75rem; border: 2px solid #e0e0e0; background: #f9f9f9; color: #2c2c2c; border-radius: 10px; font-size: 0.95rem; margin-bottom: 1rem; }
+        .modal-content input:focus { outline: none; border-color: #ff8c00; background: #fff; }
+        .modal-buttons { display: flex; gap: 0.75rem; }
+        .modal-btn { flex: 1; padding: 0.75rem; border: none; border-radius: 8px; font-size: 0.95rem; font-weight: bold; cursor: pointer; transition: all 0.3s; }
+        .modal-btn-primary { background: linear-gradient(135deg, #ff8c00 0%, #ffa500 100%); color: #fff; }
+        .modal-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255, 140, 0, 0.3); }
+        .modal-btn-secondary { background: #f5f5f5; color: #666; border: 2px solid #e0e0e0; }
+        .modal-btn-secondary:hover { border-color: #ccc; background: #eee; }
+        .error-message { color: #ff4444; font-size: 0.85rem; margin-top: 0.5rem; text-align: center; }
+        .loading { text-align: center; padding: 3rem; color: #666; }
+        .add-section { background: #fff; padding: 1.5rem; border-radius: 20px; margin-bottom: 2rem; border: 2px solid rgba(255, 140, 0, 0.2); box-shadow: 0 4px 15px rgba(255, 140, 0, 0.1); }
+        .add-btn { width: 100%; background: linear-gradient(135deg, #ff8c00 0%, #ffa500 100%); color: white; border: none; padding: 1rem; border-radius: 10px; cursor: pointer; font-size: 1rem; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 0.5rem; transition: all 0.3s; }
+        .add-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(255, 140, 0, 0.4); }
+        .form-group { margin-bottom: 1.2rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-size: 0.9rem; color: #666; font-weight: 600; }
+        .form-group input, .form-group select { width: 100%; padding: 0.75rem; border: 2px solid #e0e0e0; background: #f9f9f9; color: #2c2c2c; border-radius: 10px; font-size: 0.95rem; }
+        .form-group input:focus, .form-group select:focus { outline: none; border-color: #ff8c00; background: #fff; }
+        .btn-group { display: flex; gap: 0.75rem; }
+        .btn { flex: 1; padding: 0.75rem; border: none; border-radius: 8px; font-size: 0.95rem; font-weight: bold; cursor: pointer; transition: all 0.3s; }
+        .btn-save { background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%); color: white; }
+        .btn-save:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3); }
+        .btn-cancel { background: #f5f5f5; color: #666; border: 2px solid #e0e0e0; }
+        .btn-cancel:hover { border-color: #ccc; background: #eee; }
+        .category-section { margin-bottom: 4rem; }
+        .category-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 3px solid rgba(255, 140, 0, 0.3); }
+        .category-icon { font-size: 2.5rem; filter: drop-shadow(0 0 10px rgba(255, 140, 0, 0.3)); }
+        .category-title h2 { font-size: 2rem; color: #2c2c2c; font-weight: 700; }
+        .category-title p { font-size: 1rem; color: #888; }
+        .items-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1.5rem; }
+        .item-card { background: #fff; border-radius: 20px; overflow: hidden; border: 2px solid #f0f0f0; transition: all 0.3s; cursor: pointer; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); }
+        .item-card:hover { transform: translateY(-8px); border-color: #ff8c00; box-shadow: 0 12px 30px rgba(255, 140, 0, 0.25); }
+        .item-image { width: 100%; aspect-ratio: 9 / 16; object-fit: cover; }
+        .item-video { width: 100%; aspect-ratio: 9 / 16; object-fit: cover; background: #000; }
+        .featured-badge { position: absolute; top: 10px; right: 10px; background: linear-gradient(135deg, #ff8c00 0%, #ffa500 100%); color: white; padding: 0.5rem 1rem; border-radius: 20px; font-weight: bold; font-size: 0.85rem; box-shadow: 0 4px 15px rgba(255, 140, 0, 0.4); z-index: 10; }
+        .category-section.featured { background: linear-gradient(135deg, rgba(255, 140, 0, 0.05) 0%, rgba(255, 165, 0, 0.02) 100%); padding: 2rem; border-radius: 25px; border: 2px solid rgba(255, 140, 0, 0.2); }
+        .featured .item-card { border: 3px solid #ff8c00; box-shadow: 0 8px 25px rgba(255, 140, 0, 0.3); position: relative; }
+        .item-content { padding: 1.25rem; }
+        .item-name-ar { font-size: 1.2rem; font-weight: bold; margin-bottom: 0.3rem; color: #2c2c2c; }
+        .item-name-en { font-size: 0.9rem; color: #999; margin-bottom: 1rem; }
+        .item-footer { display: flex; justify-content: space-between; align-items: center; }
+        .item-price { font-size: 1.5rem; font-weight: bold; background: linear-gradient(135deg, #ff8c00 0%, #ffa500 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .item-actions { display: flex; gap: 0.5rem; }
+        .icon-btn { width: 35px; height: 35px; border: none; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s; font-size: 1rem; }
+        .delete-btn { background: #f44336; }
+        .delete-btn:hover { background: #d32f2f; transform: scale(1.1); }
+        .empty-message { text-align: center; padding: 3rem; color: #666; }
+        .whatsapp-float { position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; background: linear-gradient(135deg, #25D366 0%, #128C7E 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 5px 20px rgba(37, 211, 102, 0.4); transition: all 0.3s; z-index: 999; }
+        .whatsapp-float:hover { transform: scale(1.1) translateY(-5px); box-shadow: 0 10px 30px rgba(37, 211, 102, 0.6); }
+        .whatsapp-float svg { width: 35px; height: 35px; fill: white; }
+        .footer { background: #fff; border-top: 2px solid rgba(255, 140, 0, 0.2); text-align: center; padding: 2rem; margin-top: 4rem; }
+        .footer h3 { font-size: 1.3rem; margin-bottom: 0.5rem; background: linear-gradient(135deg, #ff8c00 0%, #ffa500 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .footer p { color: #999; font-size: 0.9rem; }
+        .hidden { display: none; }
+        @media (max-width: 768px) { .hero h1 { font-size: 2.5rem; } .items-grid { grid-template-columns: 1fr; } .whatsapp-float { bottom: 20px; right: 20px; width: 55px; height: 55px; } }
     </style>
 </head>
 <body>
     <div class="header">
         <div class="header-content">
-            <div class="logo">
-                <img src="https://bobibra11.github.io/tasty-bob-menu/5839039835014892735.jpg" alt="Tasty Bob Logo">
-            </div>
-            <button class="admin-btn" id="adminToggle">
-                <span>🔒</span>
-                <span>Admin</span>
-            </button>
+            <div class="logo"><img src="https://bobibra11.github.io/tasty-bob-menu/5839039835014892735.jpg" alt="Tasty Bob Logo"></div>
+            <button class="admin-btn" id="adminToggle"><span>🔒</span><span>Admin</span></button>
         </div>
     </div>
-
     <div class="modal" id="loginModal">
         <div class="modal-content">
             <h2>🔐 Admin Login</h2>
@@ -610,158 +104,50 @@
             </div>
         </div>
     </div>
-
     <div class="hero">
         <img src="https://bobibra11.github.io/tasty-bob-menu/5839039835014892735.jpg" alt="Tasty Bob" style="max-width: 300px; margin-bottom: 1rem;">
         <p style="font-size: 1.3rem; font-weight: 600; margin-bottom: 1rem;">JUICE & CREPE</p>
-        <div class="scroll-indicator" id="scrollBtn">
-            <svg viewBox="0 0 24 24">
-                <path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z"/>
-            </svg>
-        </div>
+        <div class="scroll-indicator" id="scrollBtn"><svg viewBox="0 0 24 24"><path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z"/></svg></div>
     </div>
-
     <div class="container">
         <div class="add-section hidden" id="addSection">
             <button class="add-btn" id="addBtn">➕ إضافة منتج جديد</button>
-
             <div class="hidden" id="addForm">
                 <h2 style="margin-bottom: 1.5rem; color: #ff8c00;">منتج جديد</h2>
-                
-                <div class="form-group">
-                    <label>القسم</label>
-                    <select id="newCategory">
-                        <option value="featured">⭐ منتج الأسبوع - Product of the Week</option>
-                        <option value="coffee">☕ قهوة - Coffee</option>
-                        <option value="juices">🍹 عصائر - Juices</option>
-                        <option value="milkshakes">🥤 ميلك شيك - Milk Shakes</option>
-                        <option value="kashta">🍨 قشطة - Kashta</option>
-                        <option value="platefruits">🍓 صحن فواكه - Plate Fruits</option>
-                        <option value="icecream">🍦 بوظة - Ice Cream</option>
-                        <option value="crepes">🥞 كريب - Crepes</option>
-                        <option value="desserts">🍰 حلويات - Desserts</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>الاسم بالعربي</label>
-                    <input type="text" id="newNameAr" placeholder="مثال: قهوة تركية">
-                </div>
-
-                <div class="form-group">
-                    <label>English Name</label>
-                    <input type="text" id="newNameEn" placeholder="Example: Turkish Coffee">
-                </div>
-
-                <div class="form-group">
-                    <label>السعر ($)</label>
-                    <input type="number" step="0.01" id="newPrice" placeholder="2.50">
-                </div>
-
-                <div class="form-group">
-                    <label>رابط الصورة (اختياري)</label>
-                    <input type="text" id="newImage" placeholder="https://example.com/image.jpg">
-                </div>
-
-                <div class="form-group">
-                    <label>رابط الفيديو (اختياري - للمنتج المميز فقط)</label>
-                    <input type="text" id="newVideo" placeholder="https://example.com/video.mp4 or YouTube">
-                    <small style="color: #999; font-size: 0.8rem;">استخدم رابط فيديو مباشر أو YouTube</small>
-                </div>
-
-                <div class="btn-group">
-                    <button class="btn btn-save" id="saveBtn">إضافة</button>
-                    <button class="btn btn-cancel" id="cancelAddBtn">إلغاء</button>
-                </div>
+                <div class="form-group"><label>القسم</label><select id="newCategory"><option value="featured">⭐ منتج الأسبوع</option><option value="coffee">☕ قهوة</option><option value="juices">🍹 عصائر</option><option value="milkshakes">🥤 ميلك شيك</option><option value="kashta">🍨 قشطة</option><option value="platefruits">🍓 صحن فواكه</option><option value="icecream">🍦 بوظة</option><option value="crepes">🥞 كريب</option><option value="desserts">🍰 حلويات</option></select></div>
+                <div class="form-group"><label>الاسم بالعربي</label><input type="text" id="newNameAr" placeholder="مثال: قهوة تركية"></div>
+                <div class="form-group"><label>English Name</label><input type="text" id="newNameEn" placeholder="Example: Turkish Coffee"></div>
+                <div class="form-group"><label>السعر ($)</label><input type="number" step="0.01" id="newPrice" placeholder="2.50"></div>
+                <div class="form-group"><label>رابط الصورة</label><input type="text" id="newImage" placeholder="https://example.com/image.jpg"></div>
+                <div class="form-group"><label>رابط الفيديو (اختياري)</label><input type="text" id="newVideo" placeholder="YouTube or video URL"></div>
+                <div class="btn-group"><button class="btn btn-save" id="saveBtn">إضافة</button><button class="btn btn-cancel" id="cancelAddBtn">إلغاء</button></div>
             </div>
         </div>
-
         <div class="loading" id="loading">⏳ جاري التحميل...</div>
         <div id="menuContent"></div>
-
-        <div class="empty-message hidden" id="emptyMessage">
-            <p>القائمة قريباً...</p>
-        </div>
+        <div class="empty-message hidden" id="emptyMessage"><p>القائمة قريباً...</p></div>
     </div>
-
-    <a href="https://wa.me/96178966129" target="_blank" class="whatsapp-float" title="تواصل معنا عبر واتساب">
-        <svg viewBox="0 0 32 32">
-            <path d="M16 0c-8.837 0-16 7.163-16 16 0 2.825 0.737 5.607 2.137 8.048l-2.137 7.952 8.135-2.135c2.369 1.228 5.020 1.835 7.865 1.835 8.837 0 16-7.163 16-16s-7.163-16-16-16zM16 29.467c-2.482 0-4.908-0.646-7.07-1.87l-0.507-0.292-5.255 1.378 1.401-5.230-0.321-0.531c-1.344-2.215-2.051-4.763-2.051-7.389 0-7.837 6.377-14.214 14.214-14.214s14.214 6.377 14.214 14.214c0 7.837-6.377 14.214-14.214 14.214zM22.107 18.765c-0.389-0.195-2.308-1.139-2.665-1.269s-0.618-0.195-0.878 0.195c-0.26 0.389-1.009 1.269-1.236 1.529s-0.455 0.292-0.845 0.097c-0.389-0.195-1.643-0.606-3.129-1.933-1.157-1.031-1.938-2.307-2.165-2.696s-0.024-0.599 0.171-0.793c0.175-0.175 0.389-0.455 0.584-0.683s0.26-0.389 0.389-0.648c0.13-0.26 0.065-0.488-0.032-0.683s-0.878-2.116-1.204-2.896c-0.317-0.76-0.639-0.657-0.878-0.669-0.227-0.012-0.487-0.015-0.747-0.015s-0.682 0.097-1.039 0.487c-0.357 0.389-1.363 1.333-1.363 3.251s1.396 3.77 1.59 4.030c0.195 0.26 2.744 4.188 6.648 5.873 0.928 0.401 1.653 0.640 2.219 0.82 0.937 0.297 1.790 0.255 2.465 0.155 0.751-0.112 2.308-0.943 2.633-1.855s0.325-1.692 0.228-1.855c-0.097-0.162-0.357-0.26-0.747-0.455z"/>
-        </svg>
-    </a>
-
-    <div class="footer">
-        <h3>TASTY BOB</h3>
-        <p>Delicious treats for everyone</p>
-    </div>
-
+    <a href="https://wa.me/96178966129" target="_blank" class="whatsapp-float"><svg viewBox="0 0 32 32"><path d="M16 0c-8.837 0-16 7.163-16 16 0 2.825 0.737 5.607 2.137 8.048l-2.137 7.952 8.135-2.135c2.369 1.228 5.020 1.835 7.865 1.835 8.837 0 16-7.163 16-16s-7.163-16-16-16zM16 29.467c-2.482 0-4.908-0.646-7.07-1.87l-0.507-0.292-5.255 1.378 1.401-5.230-0.321-0.531c-1.344-2.215-2.051-4.763-2.051-7.389 0-7.837 6.377-14.214 14.214-14.214s14.214 6.377 14.214 14.214c0 7.837-6.377 14.214-14.214 14.214zM22.107 18.765c-0.389-0.195-2.308-1.139-2.665-1.269s-0.618-0.195-0.878 0.195c-0.26 0.389-1.009 1.269-1.236 1.529s-0.455 0.292-0.845 0.097c-0.389-0.195-1.643-0.606-3.129-1.933-1.157-1.031-1.938-2.307-2.165-2.696s-0.024-0.599 0.171-0.793c0.175-0.175 0.389-0.455 0.584-0.683s0.26-0.389 0.389-0.648c0.13-0.26 0.065-0.488-0.032-0.683s-0.878-2.116-1.204-2.896c-0.317-0.76-0.639-0.657-0.878-0.669-0.227-0.012-0.487-0.015-0.747-0.015s-0.682 0.097-1.039 0.487c-0.357 0.389-1.363 1.333-1.363 3.251s1.396 3.77 1.59 4.030c0.195 0.26 2.744 4.188 6.648 5.873 0.928 0.401 1.653 0.640 2.219 0.82 0.937 0.297 1.790 0.255 2.465 0.155 0.751-0.112 2.308-0.943 2.633-1.855s0.325-1.692 0.228-1.855c-0.097-0.162-0.357-0.26-0.747-0.455z"/></svg></a>
+    <div class="footer"><h3>TASTY BOB</h3><p>Delicious treats for everyone</p></div>
     <script>
-        const SUPABASE_URL = 'https://hwdepwwlkbxsupeauolq.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh3ZGVwd3dsa2J4c3VwZWF1b2xxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM4MTIyNTQsImV4cCI6MjA3OTM4ODI1NH0.lULOZva9noZuUIH2YAflgLFpKyXk_JqWT5EbBJZ0q6s';
-
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-        let isAdmin = false;
-        let items = [];
-
-        const categories = [
-            { id: 'featured', nameAr: 'منتج الأسبوع', nameEn: 'Product of the Week', icon: '⭐' },
-            { id: 'coffee', nameAr: 'قهوة', nameEn: 'Coffee', icon: '☕' },
-            { id: 'juices', nameAr: 'عصائر', nameEn: 'Juices', icon: '🍹' },
-            { id: 'milkshakes', nameAr: 'ميلك شيك', nameEn: 'Milk Shakes', icon: '🥤' },
-            { id: 'kashta', nameAr: 'قشطة', nameEn: 'Kashta', icon: '🍨' },
-            { id: 'platefruits', nameAr: 'صحن فواكه', nameEn: 'Plate Fruits', icon: '🍓' },
-            { id: 'icecream', nameAr: 'بوظة', nameEn: 'Ice Cream', icon: '🍦' },
-            { id: 'crepes', nameAr: 'كريب', nameEn: 'Crepes', icon: '🥞' },
-            { id: 'desserts', nameAr: 'حلويات', nameEn: 'Desserts', icon: '🍰' }
-        ];
-
-        async function checkAuth() {
-            const { data: { session } } = await supabase.auth.getSession();
-            if (session) {
-                isAdmin = true;
-                updateAdminUI();
-            }
-            loadItems();
-        }
-
-        async function loadItems() {
-            document.getElementById('loading').classList.remove('hidden');
-            
-            const { data, error } = await supabase
-                .from('menu_items')
-                .select('*')
-                .order('created_at', { ascending: true });
-
-            document.getElementById('loading').classList.add('hidden');
-
-            if (error) {
-                console.error('Error:', error);
-                return;
-            }
-
-            items = data || [];
-            renderMenu();
-        }
-
-        function updateAdminUI() {
-            const toggleBtn = document.getElementById('adminToggle');
-            const addSection = document.getElementById('addSection');
-
-            if (isAdmin) {
-                toggleBtn.classList.add('active');
-                toggleBtn.innerHTML = '<span>🔓</span><span>Logout</span>';
-                addSection.classList.remove('hidden');
-            } else {
-                toggleBtn.classList.remove('active');
-                toggleBtn.innerHTML = '<span>🔒</span><span>Admin</span>';
-                addSection.classList.add('hidden');
-            }
-        }
-
-        function renderMenu() {
-            const content = document.getElementById('menuContent');
-            const emptyMsg = document.getElementById('emptyMessage');
-
-            if (items.length === 0) {
-                content.
+const SB_URL='https://hwdepwwlkbxsupeauolq.supabase.co',SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh3ZGVwd3dsa2J4c3VwZWF1b2xxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM4MTIyNTQsImV4cCI6MjA3OTM4ODI1NH0.lULOZva9noZuUIH2YAflgLFpKyXk_JqWT5EbBJZ0q6s';
+const sb=window.supabase.createClient(SB_URL,SB_KEY);
+let isAdmin=false,items=[];
+const cats=[{id:'featured',nameAr:'منتج الأسبوع',nameEn:'Product of the Week',icon:'⭐'},{id:'coffee',nameAr:'قهوة',nameEn:'Coffee',icon:'☕'},{id:'juices',nameAr:'عصائر',nameEn:'Juices',icon:'🍹'},{id:'milkshakes',nameAr:'ميلك شيك',nameEn:'Milk Shakes',icon:'🥤'},{id:'kashta',nameAr:'قشطة',nameEn:'Kashta',icon:'🍨'},{id:'platefruits',nameAr:'صحن فواكه',nameEn:'Plate Fruits',icon:'🍓'},{id:'icecream',nameAr:'بوظة',nameEn:'Ice Cream',icon:'🍦'},{id:'crepes',nameAr:'كريب',nameEn:'Crepes',icon:'🥞'},{id:'desserts',nameAr:'حلويات',nameEn:'Desserts',icon:'🍰'}];
+async function loadItems(){document.getElementById('loading').classList.remove('hidden');const{data,error}=await sb.from('menu_items').select('*').order('created_at',{ascending:true});document.getElementById('loading').classList.add('hidden');if(error){console.error(error);return}items=data||[];renderMenu()}
+function renderMenu(){const c=document.getElementById('menuContent'),e=document.getElementById('emptyMessage');if(items.length===0){c.innerHTML='';e.classList.remove('hidden');return}e.classList.add('hidden');let html='';cats.forEach(cat=>{const citems=items.filter(i=>i.category_id===cat.id);if(citems.length===0)return;const isFeat=cat.id==='featured';html+=`<div class="category-section ${isFeat?'featured':''}"><div class="category-header"><span class="category-icon">${cat.icon}</span><div class="category-title"><h2>${cat.nameAr}</h2><p>${cat.nameEn}</p></div></div><div class="items-grid">`;citems.forEach(item=>{const hasVid=item.video&&isFeat;const vidEmbed=hasVid?getVideoEmbed(item.video):'';html+=`<div class="item-card">${isFeat?'<div class="featured-badge">⭐ منتج الأسبوع</div>':''}${hasVid?vidEmbed:item.image?`<img src="${item.image}" alt="${item.name_en}" class="item-image">`:''}<div class="item-content"><div class="item-name-ar">${item.name_ar}</div><div class="item-name-en">${item.name_en}</div><div class="item-footer"><div class="item-price">$${item.price.toFixed(2)}</div>${isAdmin?`<div class="item-actions"><button class="icon-btn delete-btn" onclick="deleteItem(${item.id})">🗑️</button></div>`:''}</div></div></div>`});html+='</div></div>'});c.innerHTML=html}
+function getVideoEmbed(url){const ytRegex=/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;const ytMatch=url.match(ytRegex);if(ytMatch){const vid=ytMatch[1];return`<iframe class="item-video" src="https://www.youtube.com/embed/${vid}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`}return`<video class="item-video" controls><source src="${url}" type="video/mp4"></video>`}
+async function deleteItem(id){if(!confirm('هل تريد حذف هذا المنتج؟'))return;const{error}=await sb.from('menu_items').delete().eq('id',id);if(error){alert('فشل حذف المنتج');return}loadItems()}
+function updateUI(){const btn=document.getElementById('adminToggle'),sec=document.getElementById('addSection');if(isAdmin){btn.classList.add('active');btn.innerHTML='<span>🔓</span><span>Logout</span>';sec.classList.remove('hidden')}else{btn.classList.remove('active');btn.innerHTML='<span>🔒</span><span>Admin</span>';sec.classList.add('hidden')}}
+document.getElementById('adminToggle').addEventListener('click',function(){if(isAdmin){sb.auth.signOut().then(()=>{isAdmin=false;updateUI();renderMenu()})}else{document.getElementById('loginModal').classList.add('show');document.getElementById('emailInput').focus()}});
+document.getElementById('loginBtn').addEventListener('click',async function(){const email=document.getElementById('emailInput').value.trim(),pw=document.getElementById('passwordInput').value,err=document.getElementById('errorMessage');if(!email||!pw){err.textContent='املأ جميع الحقول';err.classList.remove('hidden');return}err.classList.add('hidden');const{data,error}=await sb.auth.signInWithPassword({email:email,password:pw});if(error){err.textContent='بيانات خاطئة';err.classList.remove('hidden');return}isAdmin=true;document.getElementById('loginModal').classList.remove('show');document.getElementById('emailInput').value='';document.getElementById('passwordInput').value='';updateUI();renderMenu()});
+document.getElementById('cancelBtn').addEventListener('click',()=>{document.getElementById('loginModal').classList.remove('show');document.getElementById('emailInput').value='';document.getElementById('passwordInput').value='';document.getElementById('errorMessage').classList.add('hidden')});
+document.getElementById('passwordInput').addEventListener('keypress',e=>{if(e.key==='Enter')document.getElementById('loginBtn').click()});
+document.getElementById('addBtn').addEventListener('click',()=>{document.getElementById('addBtn').classList.add('hidden');document.getElementById('addForm').classList.remove('hidden')});
+document.getElementById('cancelAddBtn').addEventListener('click',()=>{document.getElementById('addBtn').classList.remove('hidden');document.getElementById('addForm').classList.add('hidden');document.getElementById('newCategory').value='featured';document.getElementById('newNameAr').value='';document.getElementById('newNameEn').value='';document.getElementById('newPrice').value='';document.getElementById('newImage').value='';document.getElementById('newVideo').value=''});
+document.getElementById('saveBtn').addEventListener('click',async function(){const nameAr=document.getElementById('newNameAr').value.trim(),nameEn=document.getElementById('newNameEn').value.trim(),price=document.getElementById('newPrice').value.trim(),category=document.getElementById('newCategory').value,image=document.getElementById('newImage').value.trim(),video=document.getElementById('newVideo').value.trim();if(!nameAr||!nameEn||!price){alert('املأ جميع الحقول المطلوبة');return}const newItem={category_id:category,name_ar:nameAr,name_en:nameEn,price:parseFloat(price),image:image||null,video:video||null};const{error}=await sb.from('menu_items').insert([newItem]);if(error){console.error(error);alert('فشل إضافة المنتج: '+error.message);return}document.getElementById('addBtn').classList.remove('hidden');document.getElementById('addForm').classList.add('hidden');document.getElementById('newCategory').value='featured';document.getElementById('newNameAr').value='';document.getElementById('newNameEn').value='';document.getElementById('newPrice').value='';document.getElementById('newImage').value='';document.getElementById('newVideo').value='';loadItems()});
+document.getElementById('scrollBtn').addEventListener('click',()=>document.getElementById('menuContent').scrollIntoView({behavior:'smooth'}));
+(async()=>{const{data:{session}}=await sb.auth.getSession();if(session){isAdmin=true;updateUI()}loadItems()})();
+    </script>
+</body>
+</html>
