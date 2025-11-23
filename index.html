@@ -498,15 +498,6 @@
             font-size: 1rem;
         }
 
-        .edit-btn {
-            background: #2196F3;
-        }
-
-        .edit-btn:hover {
-            background: #1976D2;
-            transform: scale(1.1);
-        }
-
         .delete-btn {
             background: #f44336;
         }
@@ -600,14 +591,13 @@
             <div class="logo">
                 <img src="https://bobibra11.github.io/tasty-bob-menu/5839039835014892735.jpg" alt="Tasty Bob Logo">
             </div>
-            <button class="admin-btn" id="adminToggle" onclick="requestAdminAccess()">
+            <button class="admin-btn" id="adminToggle">
                 <span>🔒</span>
-                <span id="adminText">Admin</span>
+                <span>Admin</span>
             </button>
         </div>
     </div>
 
-    <!-- Login Modal -->
     <div class="modal" id="loginModal">
         <div class="modal-content">
             <h2>🔐 Admin Login</h2>
@@ -615,16 +605,16 @@
             <input type="password" id="passwordInput" placeholder="Password">
             <div class="error-message hidden" id="errorMessage"></div>
             <div class="modal-buttons">
-                <button class="modal-btn modal-btn-primary" onclick="login()">Login</button>
-                <button class="modal-btn modal-btn-secondary" onclick="closeLoginModal()">Cancel</button>
+                <button class="modal-btn modal-btn-primary" id="loginBtn">Login</button>
+                <button class="modal-btn modal-btn-secondary" id="cancelBtn">Cancel</button>
             </div>
         </div>
     </div>
 
     <div class="hero">
-        <img src="https://bobibra11.github.io/tasty-bob-menu/5839039835014892735.jpg" alt="Tasty Bob" style="max-width: 300px; margin-bottom: 1rem; border-radius: 20px;">
+        <img src="https://bobibra11.github.io/tasty-bob-menu/5839039835014892735.jpg" alt="Tasty Bob" style="max-width: 300px; margin-bottom: 1rem;">
         <p style="font-size: 1.3rem; font-weight: 600; margin-bottom: 1rem;">JUICE & CREPE</p>
-        <div class="scroll-indicator" onclick="document.getElementById('menuContent').scrollIntoView({behavior: 'smooth'})">
+        <div class="scroll-indicator" id="scrollBtn">
             <svg viewBox="0 0 24 24">
                 <path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z"/>
             </svg>
@@ -633,9 +623,7 @@
 
     <div class="container">
         <div class="add-section hidden" id="addSection">
-            <button class="add-btn" id="addBtn" onclick="showAddForm()">
-                ➕ إضافة منتج جديد
-            </button>
+            <button class="add-btn" id="addBtn">➕ إضافة منتج جديد</button>
 
             <div class="hidden" id="addForm">
                 <h2 style="margin-bottom: 1.5rem; color: #ff8c00;">منتج جديد</h2>
@@ -677,13 +665,13 @@
 
                 <div class="form-group">
                     <label>رابط الفيديو (اختياري - للمنتج المميز فقط)</label>
-                    <input type="text" id="newVideo" placeholder="https://example.com/video.mp4 or YouTube link">
-                    <small style="color: #999; font-size: 0.8rem;">استخدم رابط فيديو مباشر (.mp4, .webm) أو YouTube</small>
+                    <input type="text" id="newVideo" placeholder="https://example.com/video.mp4 or YouTube">
+                    <small style="color: #999; font-size: 0.8rem;">استخدم رابط فيديو مباشر أو YouTube</small>
                 </div>
 
                 <div class="btn-group">
-                    <button class="btn btn-save" onclick="addItem()">إضافة</button>
-                    <button class="btn btn-cancel" onclick="cancelAdd()">إلغاء</button>
+                    <button class="btn btn-save" id="saveBtn">إضافة</button>
+                    <button class="btn btn-cancel" id="cancelAddBtn">إلغاء</button>
                 </div>
             </div>
         </div>
@@ -696,7 +684,6 @@
         </div>
     </div>
 
-    <!-- WhatsApp Float Button -->
     <a href="https://wa.me/96178966129" target="_blank" class="whatsapp-float" title="تواصل معنا عبر واتساب">
         <svg viewBox="0 0 32 32">
             <path d="M16 0c-8.837 0-16 7.163-16 16 0 2.825 0.737 5.607 2.137 8.048l-2.137 7.952 8.135-2.135c2.369 1.228 5.020 1.835 7.865 1.835 8.837 0 16-7.163 16-16s-7.163-16-16-16zM16 29.467c-2.482 0-4.908-0.646-7.07-1.87l-0.507-0.292-5.255 1.378 1.401-5.230-0.321-0.531c-1.344-2.215-2.051-4.763-2.051-7.389 0-7.837 6.377-14.214 14.214-14.214s14.214 6.377 14.214 14.214c0 7.837-6.377 14.214-14.214 14.214zM22.107 18.765c-0.389-0.195-2.308-1.139-2.665-1.269s-0.618-0.195-0.878 0.195c-0.26 0.389-1.009 1.269-1.236 1.529s-0.455 0.292-0.845 0.097c-0.389-0.195-1.643-0.606-3.129-1.933-1.157-1.031-1.938-2.307-2.165-2.696s-0.024-0.599 0.171-0.793c0.175-0.175 0.389-0.455 0.584-0.683s0.26-0.389 0.389-0.648c0.13-0.26 0.065-0.488-0.032-0.683s-0.878-2.116-1.204-2.896c-0.317-0.76-0.639-0.657-0.878-0.669-0.227-0.012-0.487-0.015-0.747-0.015s-0.682 0.097-1.039 0.487c-0.357 0.389-1.363 1.333-1.363 3.251s1.396 3.77 1.59 4.030c0.195 0.26 2.744 4.188 6.648 5.873 0.928 0.401 1.653 0.640 2.219 0.82 0.937 0.297 1.790 0.255 2.465 0.155 0.751-0.112 2.308-0.943 2.633-1.855s0.325-1.692 0.228-1.855c-0.097-0.162-0.357-0.26-0.747-0.455z"/>
@@ -709,16 +696,13 @@
     </div>
 
     <script>
-        // ⚠️ SUPABASE CREDENTIALS
         const SUPABASE_URL = 'https://hwdepwwlkbxsupeauolq.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh3ZGVwd3dsa2J4c3VwZWF1b2xxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM4MTIyNTQsImV4cCI6MjA3OTM4ODI1NH0.lULOZva9noZuUIH2YAflgLFpKyXk_JqWT5EbBJZ0q6s';
 
-        // Initialize Supabase client
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         let isAdmin = false;
         let items = [];
-        let currentUser = null;
 
         const categories = [
             { id: 'featured', nameAr: 'منتج الأسبوع', nameEn: 'Product of the Week', icon: '⭐' },
@@ -735,7 +719,6 @@
         async function checkAuth() {
             const { data: { session } } = await supabase.auth.getSession();
             if (session) {
-                currentUser = session.user;
                 isAdmin = true;
                 updateAdminUI();
             }
@@ -753,7 +736,7 @@
             document.getElementById('loading').classList.add('hidden');
 
             if (error) {
-                console.error('Error loading items:', error);
+                console.error('Error:', error);
                 return;
             }
 
@@ -761,6 +744,24 @@
             renderMenu();
         }
 
-        function requestAdminAccess() {
+        function updateAdminUI() {
+            const toggleBtn = document.getElementById('adminToggle');
+            const addSection = document.getElementById('addSection');
+
             if (isAdmin) {
-                logout();
+                toggleBtn.classList.add('active');
+                toggleBtn.innerHTML = '<span>🔓</span><span>Logout</span>';
+                addSection.classList.remove('hidden');
+            } else {
+                toggleBtn.classList.remove('active');
+                toggleBtn.innerHTML = '<span>🔒</span><span>Admin</span>';
+                addSection.classList.add('hidden');
+            }
+        }
+
+        function renderMenu() {
+            const content = document.getElementById('menuContent');
+            const emptyMsg = document.getElementById('emptyMessage');
+
+            if (items.length === 0) {
+                content.
