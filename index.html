@@ -880,10 +880,27 @@
                 .insert([newItem]);
 
             if (error) {
+                console.error('Error adding item:', error);
                 alert('فشل إضافة المنتج');
                 return;
             }
 
             cancelAdd();
+            loadItems();
+        }
+
+        async function deleteItem(id) {
+            if (!confirm('هل تريد حذف هذا المنتج؟')) return;
+
+            const { error } = await supabase
+                .from('menu_items')
+                .delete()
+                .eq('id', id);
+
+            if (error) {
+                alert('فشل حذف المنتج');
+                return;
+            }
+
             loadItems();
         }
